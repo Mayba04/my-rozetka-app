@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Table } from 'antd';
+
 
 interface ICategoryItem {
   Id: number;
@@ -22,10 +24,18 @@ const HomePage = () => {
       });
   }, []);
 
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+  ];
+
   return (
     <>
-        <h1>Hello</h1>
-      <ul>{mapData}</ul>
+        <h1>Categories</h1>
+        <Table dataSource={list} columns={columns} rowKey="id" />
     </>
   );
 };

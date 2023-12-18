@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+    /* Додайте будь-які інші глобальні стилі, які вам потрібні */
+  }
+  .ant-table {
+    margin: 0; /* Скидаємо зовнішні відступи таблиці */
+  }
+  
+  .ant-table-content {
+    padding: 0; /* Скидаємо внутрішні відступи таблиці */
+  }
+    
+
+.login-button,
+.signup-button {
+  border: none;
+  color: white; /* білий текст на кнопках */
+  background-color: #007bff; /* синій фон для кнопки логіну */
+  padding: 4px 15px;
+  margin-right: 8px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.signup-button {
+  background-color: #ffc107; /* жовтий фон для кнопки реєстрації */
+}
