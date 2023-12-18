@@ -6,10 +6,10 @@ const MainMenu = () => {
     return (
         <Menu mode="horizontal" theme="dark">
         <Menu.Item key="catalog">
-          Catalog
+          <Link to="">Catalog</Link>
         </Menu.Item>
         <Menu.Item key="create">
-          Create
+        <Link to="/create-category">Create</Link>
         </Menu.Item>
         <Menu.Item key="login" style={{ marginLeft: 'auto' }}>
           <Button className="login-button">Login</Button>
