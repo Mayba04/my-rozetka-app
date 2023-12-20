@@ -1,68 +1,112 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import {Button, Divider, Form, Input, message, Upload, UploadFile, UploadProps} from "antd";
+import {useState} from "react";
+import {RcFile, UploadChangeParam} from "antd/es/upload";
+import { PlusOutlined} from '@ant-design/icons';
+import {ICategoryCreate} from "../Category/type.ts";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const AddCategoryForm = () => {
-  const [categoryName, setCategoryName] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    if (image) {
-      formData.append('image', image);
-    }
-    formData.append('name', categoryName);
-
-    axios.post('http://rozetka.com/api/categories', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+  const [file, setFile] = useState<File | null>(null);
+  const navigate = useNavigate();
+  const onSubmit = async (values: any) => {
+      if(file==null) {
+          message.error("Оберіть фото!");
+          return;
       }
-    })
-    .then(response => {
-      console.log(response.data);;
-    })
-    .catch(error => {
-      console.error('There was an error!', error);
-    });
+      const model : ICategoryCreate = {
+          name: values.name,
+          image: file
+      };
+      try {
+          await axios.post("http://rozetka.com/api/categories", model,{
+              headers: {
+                  "Content-Type": "multipart/form-data"
+              }
+          });
+          navigate("/");
+      }
+      catch (ex) {
+          message.error('Error creating category!');
+      }
+  }
+  const onSubmitFailed = (errorInfo: any) => {
+      console.log("Error Form data", errorInfo);
+  }
+
+  type FieldType = {
+      name?: string;
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files?.length) {
-      setImage(event.target.files[0]);
-    }
+  const beforeUpload = (file: RcFile) => {
+      const isImage = /^image\/\w+/.test(file.type);
+      if (!isImage) {
+          message.error('Select an image file!');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 10;
+      if (!isLt2M) {
+          message.error('The file size should not exceed 10MB!');
+      }
+      console.log("is select", isImage && isLt2M);
+      return isImage && isLt2M;
   };
+  const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
+      const file = info.file.originFileObj as File;
+      setFile(file);
+  };
+
+  const uploadButton = (
+      <div>
+          <PlusOutlined/>
+          <div style={{marginTop: 8}}>Upload</div>
+      </div>
+  );
 
   return (
-    <div className="container mt-4">
-      <h2>Add New Category</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="categoryName" className="form-label">Category Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="categoryName"
-            value={categoryName}
-            onChange={e => setCategoryName(e.target.value)}
-            required
-          />
+  <>
+    <Divider>Create category</Divider>
+    <Form
+    labelCol={{span: 8}}
+    wrapperCol={{span: 16}}
+    style={{maxWidth: 600}}
+    initialValues={{remember: true}}
+    onFinish={onSubmit}
+    onFinishFailed={onSubmitFailed}>
+    <Form.Item
+    label="Name"
+    name="name"
+    rules={[{required: true, message: 'Enter name!'}]}
+    >
+      <Input/>
+      </Form.Item>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+          <Upload
+            name="avatar"
+            listType="picture-card"
+            className="avatar-uploader"
+            showUploadList={false}
+            action="#"
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+            accept="image/*"
+            >
+          
+          {file ? (
+                      <img src={URL.createObjectURL(file)} alt="avatar" style={{ width: '100%', height: 'auto', maxWidth: '300px' }}/>
+                  ) : (
+                      uploadButton
+                  )}
+              </Upload>     
         </div>
-        <div className="mb-3">
-          <label htmlFor="categoryImage" className="form-label">Category Image</label>
-          <input
-            type="file"
-            className="form-control"
-            id="categoryImage"
-            onChange={handleImageChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
-    </div>
-  );
-};
 
+        <Form.Item wrapperCol={{offset: 8, span: 16}}> 
+          <Button type="primary" htmlType="submit">
+            Create
+          </Button>
+        </Form.Item>  
+
+      </Form> 
+  </>
+  )
+}
 export default AddCategoryForm;

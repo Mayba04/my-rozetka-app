@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table } from 'antd';
+import { ColumnsType } from "antd/es/table";
 
 interface ICategoryItem {
   id: number;
@@ -15,16 +16,21 @@ const HomePage = () => {
     axios
       .get<ICategoryItem[]>("http://rozetka.com/api/categories")
       .then((resp) => {
-        //console.log("Resp data", resp.data);
-        const dataWithImageUrls = resp.data.map(item => ({
-          ...item,
-          imageUrl: `http://rozetka.com/upload/150_${item.image}` 
-        }));
-        setList(dataWithImageUrls);
+        console.log("Resp data", resp.data);
+        // const dataWithImageUrls = resp.data.map(item => ({
+        //   ...item,
+        //   imageUrl: `http://rozetka.com/upload/150_${item.image}` 
+        // }));
+        setList(resp.data);
       });
   }, []);
 
-  const columns = [
+  const columns: ColumnsType<ICategoryItem> = [
+    {
+      title: '№',
+      dataIndex: 'id',
+      key: 'id',
+    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -32,9 +38,11 @@ const HomePage = () => {
     },
     {
       title: 'Image',
-      dataIndex: 'imageUrl',
+      dataIndex: 'image',
       key: 'image',
-      render: (imageUrl: string) => <img src={imageUrl} alt="" />
+      render: (image: string) => { return (
+        <img src={`http://rozetka.com/upload/150_${image}`} alt={"Image"}/>)}
+    
     },
   ];
 
