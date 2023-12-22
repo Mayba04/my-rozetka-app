@@ -8,7 +8,7 @@ import { message } from 'antd';
 const EditCategoryPage = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const [category, setCategory] = useState({ name: '' }); // Змінено з null на об'єкт із властивістю name
+  const [category, setCategory] = useState({ name: '' }); 
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,16 +34,16 @@ const EditCategoryPage = () => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = function(e: any) {
-        setImageUrl(e.target.result); // Використовуємо Data URL для показу зображення
+        setImageUrl(e.target.result);
       };
       reader.readAsDataURL(file);
-      setSelectedImage(file); // Зберігаємо файл для надсилання на сервер
+      setSelectedImage(file); 
     }
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    setLoading(true); // Починаємо завантаження
+    setLoading(true); 
 
     const formData = new FormData();
     formData.append('name', category.name);
@@ -53,14 +53,14 @@ const EditCategoryPage = () => {
 
     try {
       const response = await axios.post(`http://rozetka.com/api/categories/edit/${categoryId}`, formData);
-      setImageUrl(response.data.imageUrl); // Оновлюємо imageUrl до URL з сервера
+      setImageUrl(response.data.imageUrl); 
       message.success('Category updated successfully!');
       navigate('/');
     } catch (error) {
       console.error('Failed to update category', error);
       message.error('Failed to update category');
     } finally {
-      setLoading(false); // Закінчуємо завантаження
+      setLoading(false); 
     }
   };
 
