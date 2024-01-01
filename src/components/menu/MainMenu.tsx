@@ -15,7 +15,9 @@ const MainMenu = () => {
           <Button className="login-button">Login</Button>
         </Menu.Item>
         <Menu.Item key="signup">
-          <Button className="signup-button">Sign-up</Button>
+          <Link to="/sign-up">
+            <Button className="signup-button">Sign-up</Button>
+          </Link>
         </Menu.Item>
       </Menu>
       );
