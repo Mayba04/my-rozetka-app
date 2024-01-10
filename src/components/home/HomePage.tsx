@@ -18,7 +18,6 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      // Якщо користувач не зареєстрований, перенаправте його на сторінку входу
       navigate('/login');
     } else {
       fetchCategories();

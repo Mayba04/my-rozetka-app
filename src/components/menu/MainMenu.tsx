@@ -13,7 +13,6 @@ const MainMenu = () => {
     navigate('/login');
   };
 
-  // Додайте перевірку isAuthenticated для рендерингу меню тільки для авторизованих користувачів
   if (!isAuthenticated) {
     return null;
   }

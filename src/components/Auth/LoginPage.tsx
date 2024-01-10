@@ -28,7 +28,6 @@ const LoginPage: React.FC = () => {
       console.log(decoded);
       localStorage.setItem('token', response.data.token);
       
-      // Ваша логіка входу - наприклад, переадресація на головну сторінку
       navigate('/');
     } catch (error) {
       setError('Неправильний email або пароль');
