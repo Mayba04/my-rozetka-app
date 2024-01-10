@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Popconfirm, Button } from 'antd';
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
+import { isUserAuthenticated } from '../audit/AuthUtils';
 
 interface ICategoryItem {
   id: number;
@@ -13,10 +14,16 @@ interface ICategoryItem {
 const HomePage = () => {
   const navigate = useNavigate();
   const [list, setList] = useState<ICategoryItem[]>([]);
+  const isAuthenticated = isUserAuthenticated();
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    if (!isAuthenticated) {
+      // Якщо користувач не зареєстрований, перенаправте його на сторінку входу
+      navigate('/login');
+    } else {
+      fetchCategories();
+    }
+  }, [isAuthenticated, navigate]);
 
   const fetchCategories = () => {
     axios.get<ICategoryItem[]>("http://rozetka.com/api/categories")
@@ -39,9 +46,8 @@ const HomePage = () => {
   };
 
   const goToEditPage = (categoryId: number) => {
-    navigate(`/edit-category/${categoryId}`); // Припустимо, що шлях для редагування категорії це /edit-category/:id
+    navigate(`/edit-category/${categoryId}`); 
   };
-
   const columns: ColumnsType<ICategoryItem> = [
     {
       title: '№',

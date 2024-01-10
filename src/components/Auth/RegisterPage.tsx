@@ -33,8 +33,8 @@ const RegisterPage = () => {
       });
 
       console.log("Registration Successful:", response.data);
-
-      navigate("/");
+      message.success('Registration Successful!');
+      navigate("/login");
     } catch (error) {
       console.error("Error creating user:", error);
       message.error("Error creating user!");
