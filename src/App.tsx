@@ -8,33 +8,18 @@ import CreateCategory from './components/Category/AddCategoryForm';
 import EditCategory from './components/Category/EditCategoryPage';
 import RegisterUser from './components/Auth/RegisterPage';
 import LoginPage from './components/Auth/LoginPage';
-import { isUserAuthenticated } from './components/audit/AuthUtils';
 
 const App: React.FC = () => {
-  const [isLoggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setLoggedIn(isUserAuthenticated());
-  }, []);
 
   return (
     <>
-      {isLoggedIn && <MainMenu />} 
+      <MainMenu /> 
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create-category" element={<CreateCategory />} />
         <Route path="/edit-category/:categoryId" element={<EditCategory />} />
         <Route path="/sign-up" element={<RegisterUser />} />
-        <Route
-          path="/login"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/" />
-            ) : (
-              <LoginPage />
-            )
-          }
-        />
+        <Route path="/login" element={<LoginPage />}/>
         <Route path="*" element={<NoMatchPage />} />
       </Routes>
     </>

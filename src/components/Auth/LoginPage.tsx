@@ -3,34 +3,37 @@ import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { isUserAuthenticated } from '../audit/AuthUtils';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useDispatch } from 'react-redux'
+import {AuthReducerActionType} from "./AuthReducer.tsx";
+import { ILogin, ILoginResult, IUser } from './type.ts';;
 
-const LoginPage: React.FC = () => {
-  const [error, setError] = useState('');
+const LoginPage = () => {
+  //const navigate = useNavigate();
+  //Хук, який викликає ACTION в глобальному REDUX - він попадає в усіх РЕДЮСЕРАХ
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [errorMessage] = useState<string>("");
+  //Відправка форми на сервер
 
-  useEffect(() => {
-    if (isUserAuthenticated()) {
-      navigate('/');
-    }
-  }, [navigate]);
-
-  const handleLogin = async (values: any) => {
+  const onFinish = async (values: ILogin) => {
     try {
-      const response = await axios.post('http://rozetka.com/api/login', {
-        email: values.email,
-        password: values.password,
+      const resp = await axios.post<ILoginResult>("http://rozetka.com/api/login", values);
+      const { token } = resp.data;
+      const user = jwtDecode(token) as IUser;
+      localStorage.setItem('token', token);
+      dispatch({
+        type: AuthReducerActionType.LOGIN_USER,
+        payload: {
+          email: user.email,
+          image: user.image,
+        } as IUser,
       });
-
-      const decoded = jwtDecode(response.data.token);
-      console.log(decoded);
-      localStorage.setItem('token', response.data.token);
-      
-      navigate('/');
-    } catch (error) {
-      setError('Неправильний email або пароль');
+      console.log(1);
+      navigate("/");
+    } catch (ex) {
+      console.error('Помилка при реєстрації!');
     }
   };
 
@@ -39,7 +42,7 @@ const LoginPage: React.FC = () => {
       <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Логін</h2>
       <Form
         name="loginForm"
-        onFinish={handleLogin}
+        onFinish={onFinish}
         initialValues={{ remember: true }}
         style={{ textAlign: 'center' }}
       >
@@ -75,7 +78,7 @@ const LoginPage: React.FC = () => {
           </Link>
         </Form.Item>
       </Form>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
     </div>
   );
 };
