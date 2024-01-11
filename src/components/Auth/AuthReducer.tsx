@@ -1,8 +1,9 @@
 import { IUser } from "./type";
 
 export enum AuthReducerActionType {
-  LOGIN_USER = "AUTH_LOGIN_USER"
-}
+    LOGIN_USER = "AUTH_LOGIN_USER",
+    LOGOUT_USER = "AUTH_LOGOUT_USER" // Додайте новий тип для видалення токену
+  }
 
 export interface IAuthReducerState {
   isAuth: boolean;
@@ -28,6 +29,14 @@ const getInitialAuthState = (): IAuthReducerState => {
         };
         localStorage.setItem("authData", JSON.stringify(newState.user));
         return newState;
+      }
+      case AuthReducerActionType.LOGOUT_USER: { 
+        localStorage.removeItem('token');
+        localStorage.removeItem('authData');
+        return {
+          isAuth: false,
+          user: null
+        };
       }
       default: {
         return state;

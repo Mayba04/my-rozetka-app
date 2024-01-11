@@ -5,9 +5,6 @@ export const isUserAuthenticated = () => {
     return !!token;
   };
 
-export const removeToken = () => {
-  localStorage.removeItem('token');
-};
 
 export interface JwtPayload {
   email: string;

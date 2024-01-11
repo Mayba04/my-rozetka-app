@@ -1,13 +1,16 @@
 import { Menu, Avatar, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserInfo, removeToken } from "../audit/AuthUtils";
+import { getUserInfo } from "../audit/AuthUtils";
+import { useDispatch } from 'react-redux';
+import { AuthReducerActionType } from '../Auth/AuthReducer';
 
 const MainMenu = () => {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    removeToken();
+    dispatch({ type: AuthReducerActionType.LOGOUT_USER });
     navigate("/login");
   };
 

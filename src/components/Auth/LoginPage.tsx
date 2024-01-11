@@ -33,7 +33,7 @@ const LoginPage = () => {
       console.log(1);
       navigate("/");
     } catch (ex) {
-      console.error('Помилка при реєстрації!');
+      message.error("Помилка при входу!");
     }
   };
 
