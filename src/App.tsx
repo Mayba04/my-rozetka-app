@@ -8,6 +8,8 @@ import CreateCategory from './components/Category/AddCategoryForm';
 import EditCategory from './components/Category/EditCategoryPage';
 import RegisterUser from './components/Auth/RegisterPage';
 import LoginPage from './components/Auth/LoginPage';
+import ProductListPage from './components/Product/ProductListPage';
+import ProductPage from './components/Product/ProductPage';
 
 const App: React.FC = () => {
 
@@ -15,6 +17,8 @@ const App: React.FC = () => {
     <>
       <MainMenu /> 
       <Routes>
+        <Route  path="/products" element={<ProductListPage/>} />
+        <Route path="/products/:productId"element={<ProductPage/>} />
         <Route path="/" element={<HomePage />} />
         <Route path="/create-category" element={<CreateCategory />} />
         <Route path="/edit-category/:categoryId" element={<EditCategory />} />

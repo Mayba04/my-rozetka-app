@@ -24,6 +24,9 @@ const MainMenu = () => {
           <Menu.Item key="catalog">
             <Link to="/">Catalog</Link>
           </Menu.Item>
+          <Menu.Item key="product">
+            <Link to="/products">Product</Link>
+          </Menu.Item>
           <Menu.Item key="create">
             <Link to="/create-category">Create</Link>
           </Menu.Item>
